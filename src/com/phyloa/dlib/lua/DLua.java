@@ -1,5 +1,8 @@
 package com.phyloa.dlib.lua;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -15,8 +18,8 @@ import javax.script.ScriptException;
  */
 public class DLua 
 {
-	private static ScriptEngineManager mgr = new ScriptEngineManager();
-	private static ScriptEngine e = mgr.getEngineByExtension(".lua");
+	public static ScriptEngineManager mgr = new ScriptEngineManager();
+	public static ScriptEngine e = mgr.getEngineByExtension(".lua");
 	
 	private String script = "";
 	

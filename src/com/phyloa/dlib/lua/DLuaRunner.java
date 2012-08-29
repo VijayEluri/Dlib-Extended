@@ -1,16 +1,44 @@
 package com.phyloa.dlib.lua;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import javax.script.ScriptException;
 
 public class DLuaRunner
 {
-	HashMap<String, DLua> scripts = new HashMap<String, DLua>();
+	public boolean debug = false;
+	public LinkedList<String> queue = new LinkedList<String>();
+	public HashMap<String, DLua> scripts = new HashMap<String, DLua>();
 	
 	public DLuaRunner()
 	{
-		
+		new Thread( new Runnable() {
+			public void run() 
+			{
+				while( true )
+				{
+					try {
+						Thread.sleep( 15 );
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					if( queue.size() > 0 )
+					{
+						try {
+							if( debug )
+							{
+								System.out.println( "DLuaRunner: run" + queue.peek() );
+							}
+							scripts.get( queue.removeFirst() ).run();
+						} catch (ScriptException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			} 
+		} ).start();
 	}
 	
 	public void add( String name, DLua script )
@@ -23,9 +51,9 @@ public class DLuaRunner
 		add( name, new DLua( script ) );
 	}
 	
-	public void run( String name ) throws ScriptException
+	public void run( String name )
 	{
-		scripts.get( name ).run();
+		queue.addLast( name );
 	}
 	
 	public DLua get( String name )
